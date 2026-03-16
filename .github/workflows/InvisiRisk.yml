@@ -37,12 +37,6 @@ jobs:
           git checkout main
           git merge upstream/main --no-edit
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/ir-pranesh-shrestha/trcli-Sembi main
-          
-      - name: Setup PSE
-        uses: invisirisk/pse-action@latest
-        with:
-          api_url: "https://app.invisirisk.com"
-          app_token: ${{ secrets.IR_API_KEY_PROD }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -51,24 +45,3 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r tests/requirements.txt
-
-      - name: Cleanup PSE
-        if: always()
-        uses: invisirisk/pse-action@latest
-        with:
-          cleanup: "true"
-
-
-  gather_analytics:
-    runs-on: ubuntu-latest
-    name: Gather Analytics
-    needs: sync-and-build
-    if: always()
-    steps:
-      - name: Gather Status
-        uses: invisirisk/pse-action@latest
-        with:
-          api_url: "https://app.invisirisk.com"
-          app_token: ${{ secrets.IR_API_KEY_PROD }}
-          send_job_status: "true"
-          debug: "true"
